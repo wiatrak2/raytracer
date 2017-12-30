@@ -10,14 +10,20 @@ sig
 	val div : vec3 -> vec3 -> vec3
 	val smul : t -> vec3 -> vec3
 	val dot : vec3 -> vec3 -> t
-	val abs : vec -> t
-	val norm : vec -> vec
+	val abs : vec3 -> t
+	val norm : vec3 -> vec3
+	val cross : vec3 -> vec3 -> vec3
+	val printVec : vec3 -> unit
 end
 
 module Vec3f : VEC3 with type t = float = 
 struct
 	type t = float
-	type vec3 = { x:float; y:float; z:float }
+	type vec3 = {
+		x : float; 
+		y : float; 
+		z : float;
+	}
 	let make x y z = { x = x; y = y; z = z }
 	let get vec = (vec.x, vec.y, vec.z)
 	let add v1 v2 = { x = v1.x +. v2.x ; y = v1.y +. v2.y ; z = v1.z +. v2.z }
@@ -29,4 +35,12 @@ struct
 	let abs v = sqrt @@ dot v v
 	let norm v = let r = 1. /. abs v in 
 		{ x = r *. v.x ; y = r *. v.y ; z = r *. v.z }
+	let cross v1 v2 = {
+		x = v1.y *. v2.z -. v1.z *. v2.y;
+    	y = v1.z *. v2.x -. v1.x *. v2.z;
+    	z = v1.x *. v2.y -. v1.y *. v2.x;
+	}
+	let printVec v = Printf.printf "%.2f %.2f %.2f\n" v.x v.y v.z
 end
+
+let vec3f = Vec3f.make
