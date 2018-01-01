@@ -28,18 +28,18 @@ struct
 	type t = {
 		width : float;
 		height : float;
-		left_bottom : Vec3f.vec3;
 		res: int * int;
 		aspect_ratio: float;
 	}
 
-	let make w h lb res = {
+	let make w h res = {
 		width = w;
 		height = h;
-		left_bottom = lb;
 		res = res;
 		aspect_ratio = w /. h;
 	}
+
+	let getRes screen = screen.res
 end
 
 module Camera = 
@@ -58,14 +58,7 @@ struct
 		ortb = OrtBase.make origin at up;
 	}
 
-	let get_ray camera i j = 
-		let ray_dir = OrtBase.mul camera.ortb @@ Vec3f.make i j (-1. *. camera.dist) in
-		Ray.make camera.origin ray_dir
+	let getRay camera i j = 
+		let rayDir = OrtBase.mul camera.ortb @@ Vec3f.make i j (-1. *. camera.dist) in
+		Ray.make camera.origin rayDir
 end
-
-let v1 = vec3f 0. 1. (-8.);;
-let lb = vec3f (-1.) 1. 1.;;
-let s = Screen.make 3.0 3.0 lb (256, 256);;
-let cam = Camera.make v1 s 1. (vec3f 0. 0. 0.) (vec3f 0. (-1.) 0.);;
-Vec3f.printVec @@ Ray.origin @@ Camera.get_ray cam 5. 5.;;
-Vec3f.printVec @@ Ray.direction @@ Camera.get_ray cam 5. 5.;;

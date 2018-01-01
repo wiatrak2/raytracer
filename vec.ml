@@ -11,6 +11,7 @@ sig
 	val smul : t -> vec3 -> vec3
 	val dot : vec3 -> vec3 -> t
 	val abs : vec3 -> t
+	val len2 : vec3 -> t
 	val norm : vec3 -> vec3
 	val cross : vec3 -> vec3 -> vec3
 	val printVec : vec3 -> unit
@@ -33,6 +34,7 @@ struct
 	let smul s v = { x = s *. v.x ; y = s *. v.y ; z = s *. v.z }
 	let dot v1 v2 = v1.x *. v2.x +. v1.y *. v2.y +. v1.z *. v2.z
 	let abs v = sqrt @@ dot v v
+	let len2 v = dot v v
 	let norm v = let r = 1. /. abs v in 
 		{ x = r *. v.x ; y = r *. v.y ; z = r *. v.z }
 	let cross v1 v2 = {

@@ -7,5 +7,6 @@ struct
 	let make origin direction = { origin = origin ; direction = direction  }
 	let origin r = r.origin
 	let direction r = r.direction
+	let epsilon = 0.001
 end
 
