@@ -1,33 +1,23 @@
 open Vec
 open Ray
-
-module Color = 
-struct
-	type t = {
-		r : float;
-		g : float;
-		b : float;
-	}
-
-	let make r g b = { r = r; g = g; b = b }
-	let get color = (color.r, color.g, color.b)
-end
+open Intersection
+open Material
 
 module Sphere = 
 struct
 	type t = {
 		center : Vec3f.vec3;
 		radius : Vec3f.t;
-		color  : Color.t;
+		material  : Material.t;
 	}
 
-	let make center radius color = {
+	let make center radius material = {
 		center = center;
 		radius = radius;
-		color  = color;
+		material  = material;
 	}
 
-	let checkHit sphere (ray:Ray.t) = 
+	let checkIntersection sphere (ray:Ray.t) = 
 		let dist = Vec3f.sub ray.origin sphere.center in
 		let a = Vec3f.len2 ray.direction in
 		let b = 2. *. (Vec3f.dot ray.direction dist) in
@@ -38,6 +28,11 @@ struct
 			else
 				let discSqrt = sqrt disc in
 				let t = (-.b -. discSqrt) /. denom in
-				if t < Ray.epsilon then
-				(*TODO*)
+				if t > Ray.epsilon then Some(Intersection.make t (Ray.pointAt ray t) sphere.material)
+				else 
+					let t = (-.b +. discSqrt) /. denom in
+					if t > Ray.epsilon then Some(Intersection.make t (Ray.pointAt ray t) sphere.material)
+					else None
+
 end
+

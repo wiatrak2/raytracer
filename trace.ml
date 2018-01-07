@@ -1,22 +1,31 @@
-open Camera
 open Vec
 open Ray
 open Sphere
+open Intersection
+open Material
+open World
 
-let trace camera screen = 
-	let (w,h) = Screen.getRes screen in
-	for i = 0 to w do
-		for j = 0 to h do
-			Printf.printf "%d %d\n" i j
-		done
-	done
+let getIntersection (ray: Ray.t) (world: World.t) = 
+	
+	let nearestIntersection: Intersection.t option ref = ref None in
 
-let v1 = vec3f 0. 1. (-8.);;
-let s = Screen.make 3.0 3.0 (5, 5);;
-let cam = Camera.make v1 s 1. (vec3f 0. 0. 0.) (vec3f 0. (-1.) 0.);;
-Vec3f.printVec @@ Ray.origin @@ Camera.getRay cam 5. 5.;;
-Vec3f.printVec @@ Ray.direction @@ Camera.getRay cam 5. 5.;;
-trace cam s;;
+	let checkIntersection (sphere: Sphere.t) =
+		let intersectionTest = Sphere.checkIntersection sphere ray in
+		match intersectionTest with
+			| None -> ()
+			| Some intersection -> 
+				match !nearestIntersection with
+					| None -> nearestIntersection := intersectionTest
+					| Some existingIntersection ->
+						let currentT, newT = (Intersection.getT existingIntersection), (Intersection.getT intersection) in
+						if newT < currentT then nearestIntersection := intersectionTest;
+	in List.iter (fun x -> checkIntersection x) (World.getSpheres world);
+	!nearestIntersection
 
-let sphere = Sphere.make (vec3f 1. 1. 1.) 1. (Color.make 0.1 0.2 0.3);;
-Vec3f.printVec @@ Sphere.checkHit sphere (Camera.getRay cam 5. 5.);;
+
+let traceRay (ray: Ray.t) (world: World.t) =
+	let nearestIntersection = getIntersection ray world in
+	match nearestIntersection with
+		| None -> World.getBackground world
+		| Some intersection -> Intersection.getMaterial intersection
+		

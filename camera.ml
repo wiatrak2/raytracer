@@ -1,5 +1,6 @@
 open Vec
 open Ray
+open Material
 
 module OrtBase = 
 struct
@@ -30,16 +31,22 @@ struct
 		height : float;
 		res: int * int;
 		aspect_ratio: float;
+		pixels: Color.t array;
 	}
 
-	let make w h res = {
-		width = w;
-		height = h;
-		res = res;
-		aspect_ratio = w /. h;
-	}
+	let make w h res = 
+		let (wr, hr) = res in
+		{
+			width = w;
+			height = h;
+			res = res;
+			aspect_ratio = w /. h;
+			pixels = Array.init (wr * hr) @@ fun x -> zero;
+		}
 
 	let getRes screen = screen.res
+	let getPixels screen = screen.pixels
+	let setPixel screen index color = Array.set screen.pixels index color 
 end
 
 module Camera = 

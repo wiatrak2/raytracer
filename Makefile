@@ -1,9 +1,9 @@
-all: ray
+all: raytracer
 
-ray:
-	ocamlc -o ray vec.ml ray.ml camera.ml sphere.ml trace.ml
+raytracer:
+	ocamlc -o raytracer vec.ml material.ml ray.ml intersection.ml sphere.ml camera.ml world.ml output.ml trace.ml raytracer.ml
 
 clean:
-	rm *.c* ray
+	rm *.c* raytracer
 
-.PHONY: clean ray
+.PHONY: clean raytracer
