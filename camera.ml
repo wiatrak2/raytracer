@@ -67,7 +67,7 @@ struct
 		ortb: OrtBase.t;
 	}
 	
-	let make origin screen ortb = {
+	let make_ origin screen ortb = {
 		origin = origin;
 		screen = screen;
 		ortb = ortb;
@@ -76,7 +76,7 @@ struct
 	let getScreen camera = camera.screen
 	let getOrigin camera = camera.origin
 
-	let makeFov (origin: Vec3f.vec3) (lookAt: Vec3f.vec3) (fov: float) (res: int * int) =
+	let make (origin: Vec3f.vec3) (lookAt: Vec3f.vec3) (fov: float) (res: int * int) =
 		let (width, height) = res in
 		let up = vec3f 0. 1. 0. in
 		let ortb = OrtBase.make origin lookAt up in
@@ -86,7 +86,7 @@ struct
 		let halfW = tan fovRadian in
 		let halfH = aspectRatio *. halfW in
 		let screen = Screen.make (halfW *. 2.) (halfH *. 2.) res in
-		let camera = make origin screen ortb in
+		let camera = make_ origin screen ortb in
 		(camera, screen)
 		
 	let getRayDir camera (i: int) (j: int) =

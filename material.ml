@@ -9,7 +9,7 @@ struct
 	let make r g b = { r = r; g = g; b = b }
 	let get color = (color.r, color.g, color.b)
 
-	let randColor = {
+	let randColor () = {
 		r = Random.float 1.;
 		g = Random.float 1.;
 		b = Random.float 1.;

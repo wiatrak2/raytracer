@@ -17,6 +17,16 @@ struct
 		material  = material;
 	}
 
+	let makeRandomSphere (maxRadius: float) (worldCenter: Vec3f.vec3) (worldRadius: float) =
+		let radius = Random.float maxRadius in
+		let (wX, wY, wZ) = Vec3f.get worldCenter in
+		let makeRandomCenter () = 
+			let x = wX +. (Random.float worldRadius *. 2. -. worldRadius) in
+			let y = wY +. (Random.float worldRadius *. 2. -. worldRadius) in
+			let z = wZ +. (Random.float worldRadius *. 2. -. worldRadius) in
+			vec3f x y z 
+		in make (makeRandomCenter()) radius (Material.make (Color.randColor()))
+
 	let checkIntersection sphere (ray:Ray.t) = 
 		let dist = Vec3f.sub (Ray.origin ray) sphere.center in
 		let a = Vec3f.len2 (Ray.direction ray) in
