@@ -6,7 +6,7 @@ struct
 		b : float;
 	}
 
-	let make r g b = { r = r; g = g; b = b }
+	let make (r: float) (g: float) (b: float) = { r = r; g = g; b = b }
 	let get color = (color.r, color.g, color.b)
 
 	let randColor () = {
@@ -24,7 +24,7 @@ struct
 		color: Color.t;
 	}
 
-	let make color = {
+	let make (color: Color.t) = {
 		color = color
 	}
 	

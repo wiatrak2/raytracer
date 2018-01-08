@@ -11,7 +11,7 @@ struct
 		material  : Material.t;
 	}
 
-	let make center radius material = {
+	let make (center: Vec3f.vec3) (radius: Vec3f.t) (material: Material.t) = {
 		center = center;
 		radius = radius;
 		material  = material;

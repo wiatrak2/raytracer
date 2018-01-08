@@ -9,7 +9,11 @@ struct
 		material : Material.t;
 	}
 
-  let make t point material = { t = t; point = point; material = material}
-  let getT intersection = intersection.t
-  let getMaterial intersection = intersection.material 
+	let make (t: float) (point: Vec3f.vec3) (material: Material.t) = { 
+		t = t; 
+		point = point; 
+		material = material
+  	}
+  	let getT intersection = intersection.t
+  	let getMaterial intersection = intersection.material 
 end

@@ -10,7 +10,7 @@ struct
 		v : Vec3f.vec3;
 	}
 
-	let make origin lookAt up = 
+	let make (origin: Vec3f.vec3) (lookAt: Vec3f.vec3) (up: Vec3f.vec3) = 
 		let w = Vec3f.norm @@ Vec3f.sub lookAt origin in
 		let u = Vec3f.norm @@ Vec3f.cross w up in
 		let v = Vec3f.cross u w in
@@ -18,7 +18,7 @@ struct
 
 	let get ort = (ort.w, ort.u, ort.v)
 
-	let mul ort vec = 
+	let mul ort (vec: Vec3f.vec3) = 
 		let (x, y, z) = Vec3f.get vec in
 		let x = Vec3f.smul x ort.w in
 		let y = Vec3f.smul y ort.u in
@@ -38,7 +38,7 @@ struct
 		pixels: Color.t array;
 	}
 
-	let make w h res = 
+	let make (w: float) (h: float) (res: int * int) = 
 		let (wr, hr) = res in
 		{
 			width = w;
@@ -55,7 +55,7 @@ struct
 	let getPixelSize screen = (screen.pixelW, screen.pixelH)
 	let getPixels screen = screen.pixels
 	let getRatio screen = screen.aspectRatio
-	let setPixel screen index color = Array.set screen.pixels index color 
+	let setPixel screen (index: int) (color: Color.t) = Array.set screen.pixels index color 
 end
 
 module Camera = 
@@ -67,7 +67,7 @@ struct
 		ortb: OrtBase.t;
 	}
 	
-	let make_ origin screen ortb = {
+	let make_ (origin: Vec3f.vec3) (screen: Screen.t) (ortb: OrtBase.t) = {
 		origin = origin;
 		screen = screen;
 		ortb = ortb;
@@ -76,9 +76,8 @@ struct
 	let getScreen camera = camera.screen
 	let getOrigin camera = camera.origin
 
-	let make (origin: Vec3f.vec3) (lookAt: Vec3f.vec3) (fov: float) (res: int * int) =
+	let make (origin: Vec3f.vec3) (lookAt: Vec3f.vec3) ?(up = vec3f 0. 1. 0.) (fov: float) (res: int * int)  =
 		let (width, height) = res in
-		let up = vec3f 0. 1. 0. in
 		let ortb = OrtBase.make origin lookAt up in
 		let pi = 3.1415926536 in
 		let fovRadian = pi *. (fov /. 2.) /. 180.  in
