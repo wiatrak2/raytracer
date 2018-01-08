@@ -7,31 +7,30 @@ open Material
 open World
 open Output
 
-let trace camera screen = 
-	let (w,h) = Screen.getRes screen in
+let trace (camera: Camera.t) (world: World.t)  = 
+	let screen = Camera.getScreen camera in
+	let (w,h) = Screen.getRes screen  in
+	let origin = Camera.getOrigin camera in
+	for i = 0 to (h - 1)  do
+		for j = 0 to (w - 1) do
+			let rayDir = Camera.getRayDir camera i j in
+			let ray = Ray.make origin rayDir in
+			let col = Trace.traceRay ray world in
+			Screen.setPixel screen (j + (w*i)) (Material.get col);
+		done;
+	done;
+	output "out.ppm" screen
 
-	for i = 0 to (w - 1)  do
-		for j = 0 to (h - 1) do
-			let col = Color.randColor in
-			Screen.setPixel screen (j + (w*i)) col;
 
-		done
-	done
 
-let v1 = vec3f 0. 1. (-8.);;
-let s = Screen.make 3.0 3.0 (320, 320);;
-let cam = Camera.make v1 s 1. (vec3f 0. 0. 0.) (vec3f 0. (-1.) 0.);;
-Vec3f.printVec @@ Ray.origin @@ Camera.getRay cam 5. 5.;;
-Vec3f.printVec @@ Ray.direction @@ Camera.getRay cam 5. 5.;;
-trace cam s;;
-let sphere = Sphere.make (vec3f 1. 1. 1.) 1. (Material.make @@ Color.make 0.1 0.2 0.3);;
-Intersection.printHit @@ Sphere.checkIntersection sphere (Camera.getRay cam 5. 5.);;
-
-let is = Intersection.make 1.32 v1 (Material.make @@ Color.randColor) in
-Printf.printf "in: %.2f\n" @@ Intersection.getT is;;
-
-let fcol = Array.get (Screen.getPixels s) 0 in
-let (r,g,b) = Color.get fcol in
-Printf.printf "\n%.2f %.2f %.2f\n" r g b;;
-
-output "out.ppm" s
+let origin = vec3f 0. 1.8 10.;;
+let lookAt = vec3f 0. 3. 0.;;
+let fov = 45.;;
+let res = (640, 480);;
+let (camera, screen) = Camera.makeFov origin lookAt fov res;;
+let makecol x y z = Material.make @@ Color.make x y z;;
+let sphere1 = Sphere.make (vec3f 0. 3.5 (-3.)) 3. (makecol 0.2 0.5 0.8);;
+let sphere2 = Sphere.make (vec3f (-4.) 2. (-1.)) 0.2 (makecol 0.7 0.3 0.6);;
+let sphere3 = Sphere.make (vec3f (-4.) 3. (-1.)) 0.1 (makecol 0.4 0.7 0.7);;
+let world = World.make [sphere1;sphere2;sphere3] (makecol 0.3 0.9 0.5);;
+trace camera world;;

@@ -10,17 +10,19 @@ struct
 		v : Vec3f.vec3;
 	}
 
-	let make camera look_at up = 
-		let w = Vec3f.norm @@ Vec3f.sub camera look_at in
-		let u = Vec3f.norm @@ Vec3f.cross up w in
-		let v = Vec3f.cross w u in
+	let make origin lookAt up = 
+		let w = Vec3f.norm @@ Vec3f.sub lookAt origin in
+		let u = Vec3f.norm @@ Vec3f.cross w up in
+		let v = Vec3f.cross u w in
 		{ w = w; u = u; v = v; }
+
+	let get ort = (ort.w, ort.u, ort.v)
 
 	let mul ort vec = 
 		let (x, y, z) = Vec3f.get vec in
-		let x = Vec3f.smul x ort.u in
-		let y = Vec3f.smul y ort.v in
-		let z = Vec3f.smul z ort.w in 
+		let x = Vec3f.smul x ort.w in
+		let y = Vec3f.smul y ort.u in
+		let z = Vec3f.smul z ort.v in 
 		Vec3f.add x @@ Vec3f.add y z
 end
 
@@ -30,7 +32,9 @@ struct
 		width : float;
 		height : float;
 		res: int * int;
-		aspect_ratio: float;
+		aspectRatio: float;
+		pixelW: float;
+		pixelH: float;
 		pixels: Color.t array;
 	}
 
@@ -40,32 +44,59 @@ struct
 			width = w;
 			height = h;
 			res = res;
-			aspect_ratio = w /. h;
-			pixels = Array.init (wr * hr) @@ fun x -> zero;
+			aspectRatio = w /. h;
+			pixelW = w /. (float_of_int wr);
+			pixelH = h /. (float_of_int hr);
+			pixels = Array.make (wr * hr) zero;
 		}
 
 	let getRes screen = screen.res
+	let getSize screen = (screen.width, screen.height)
+	let getPixelSize screen = (screen.pixelW, screen.pixelH)
 	let getPixels screen = screen.pixels
+	let getRatio screen = screen.aspectRatio
 	let setPixel screen index color = Array.set screen.pixels index color 
 end
 
 module Camera = 
 struct
+	
 	type t = {
 		origin: Vec3f.vec3;
 		screen: Screen.t;
-		dist: float;
 		ortb: OrtBase.t;
 	}
-
-	let make origin screen dist at up = {
+	
+	let make origin screen ortb = {
 		origin = origin;
 		screen = screen;
-		dist = dist;
-		ortb = OrtBase.make origin at up;
+		ortb = ortb;
 	}
 
-	let getRay camera i j = 
-		let rayDir = OrtBase.mul camera.ortb @@ Vec3f.make i j (-1. *. camera.dist) in
-		Ray.make camera.origin rayDir
+	let getScreen camera = camera.screen
+	let getOrigin camera = camera.origin
+
+	let makeFov (origin: Vec3f.vec3) (lookAt: Vec3f.vec3) (fov: float) (res: int * int) =
+		let (width, height) = res in
+		let up = vec3f 0. 1. 0. in
+		let ortb = OrtBase.make origin lookAt up in
+		let pi = 3.1415926536 in
+		let fovRadian = pi *. (fov /. 2.) /. 180.  in
+		let aspectRatio = (float_of_int height) /. (float_of_int width) in
+		let halfW = tan fovRadian in
+		let halfH = aspectRatio *. halfW in
+		let screen = Screen.make (halfW *. 2.) (halfH *. 2.) res in
+		let camera = make origin screen ortb in
+		(camera, screen)
+		
+	let getRayDir camera (i: int) (j: int) =
+		let (i, j) = (float_of_int i, float_of_int j) in
+		let (pixelW, pixelH) = Screen.getPixelSize camera.screen in
+		let (w, h) = Screen.getSize camera.screen in
+		let (halfW, halfH) = (w /. 2., h /. 2.) in
+		let scaleW, scaleH = ((i *. pixelW) -. halfW), ((j *. pixelH) -. halfH) in
+		let (w, u, v) = OrtBase.get camera.ortb in
+		let xcomp, ycomp = Vec3f.smul scaleW u, Vec3f.smul scaleH v in
+		Vec3f.norm @@ Vec3f.add (Vec3f.add w xcomp) ycomp
+
 end

@@ -17,7 +17,7 @@ sig
 	val printVec : vec3 -> unit
 end
 
-module Vec3f : VEC3 with type t = float = 
+module Vec3f = 
 struct
 	type t = float
 	type vec3 = {
@@ -39,8 +39,8 @@ struct
 		{ x = r *. v.x ; y = r *. v.y ; z = r *. v.z }
 	let cross v1 v2 = {
 		x = v1.y *. v2.z -. v1.z *. v2.y;
-    	y = v1.z *. v2.x -. v1.x *. v2.z;
-    	z = v1.x *. v2.y -. v1.y *. v2.x;
+    y = v1.z *. v2.x -. v1.x *. v2.z;
+    z = v1.x *. v2.y -. v1.y *. v2.x;
 	}
 	let printVec v = Printf.printf "%.2f %.2f %.2f\n" v.x v.y v.z
 end

@@ -18,10 +18,10 @@ struct
 	}
 
 	let checkIntersection sphere (ray:Ray.t) = 
-		let dist = Vec3f.sub ray.origin sphere.center in
-		let a = Vec3f.len2 ray.direction in
-		let b = 2. *. (Vec3f.dot ray.direction dist) in
-		let c = Vec3f.len2 dist -. sphere.radius *. sphere.radius in 
+		let dist = Vec3f.sub (Ray.origin ray) sphere.center in
+		let a = Vec3f.len2 (Ray.direction ray) in
+		let b = 2. *. (Vec3f.dot (Ray.direction ray) dist) in
+		let c = (Vec3f.len2 dist) -. (sphere.radius *. sphere.radius) in 
 		let disc = (b *. b -. 4.0 *. a *. c) in
 		let denom = 2. *. a in
 			if disc <= 0. then None
