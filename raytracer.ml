@@ -13,19 +13,19 @@ let trace (camera: Camera.t) (world: World.t)  =
 	let origin = Camera.getOrigin camera in
 	for i = 0 to (h - 1)  do
 		for j = 0 to (w - 1) do
-			let rayDir = Camera.getRayDir camera i j in
+			let rayDir = Camera.getRayDir camera j (h-i) in
 			let ray = Ray.make origin rayDir in
 			let col = Trace.traceRay ray world in
 			Screen.setPixel screen (j + (w*i)) (Material.get col);
 		done;
 	done;
-	output "out.ppm" screen
+	output "output.ppm" screen
 
 
 
 let origin = vec3f 0. 1.8 10.;;
 let lookAt = vec3f 0. 3. 0.;;
-let fov = 45.;;
+let fov = 60.;;
 let res = (640, 480);;
 let (camera, screen) = Camera.makeFov origin lookAt fov res;;
 let makecol x y z = Material.make @@ Color.make x y z;;
