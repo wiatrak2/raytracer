@@ -42,6 +42,17 @@ struct
     y = v1.z *. v2.x -. v1.x *. v2.z;
     z = v1.x *. v2.y -. v1.y *. v2.x;
 	}
+	let randVec (mean: vec3) (variance: float) =
+		let(mX, mY, mZ) = get mean in
+		let x = mX +. (Random.float variance *. 2. -. variance) in
+		let y = mY +. (Random.float variance *. 2. -. variance) in
+		let z = mZ +. (Random.float variance *. 2. -. variance) in
+    make x y z
+	let reflectVec vec normal =
+		let dotProduct = dot vec normal in
+		let d = smul dotProduct normal in
+		sub (smul 2. d) vec
+		
 	let printVec v = Printf.printf "%.2f %.2f %.2f\n" v.x v.y v.z
 end
 

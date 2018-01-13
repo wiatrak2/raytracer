@@ -6,14 +6,16 @@ struct
 	type t = {
 		t : float;
 		point : Vec3f.vec3;
-		material : Material.t;
+		color : Color.t;
 	}
 
-	let make (t: float) (point: Vec3f.vec3) (material: Material.t) = { 
+	let make (t: float) (point: Vec3f.vec3) (color: Color.t)  = { 
 		t = t; 
 		point = point; 
-		material = material
-  	}
+		color = color;	
+	}
+	  
   	let getT intersection = intersection.t
-  	let getMaterial intersection = intersection.material 
+	let getColor intersection = intersection.color 
+
 end

@@ -17,15 +17,16 @@ struct
 		material  = material;
 	}
 
+	let getMaterial sphere = sphere.material
+
+	let getNormal sphere (point: Vec3f.vec3) = 
+		let norm = Vec3f.sub point sphere.center in
+		Vec3f.norm norm
+
 	let makeRandomSphere (maxRadius: float) (worldCenter: Vec3f.vec3) (worldRadius: float) =
 		let radius = Random.float maxRadius in
-		let (wX, wY, wZ) = Vec3f.get worldCenter in
-		let makeRandomCenter () = 
-			let x = wX +. (Random.float worldRadius *. 2. -. worldRadius) in
-			let y = wY +. (Random.float worldRadius *. 2. -. worldRadius) in
-			let z = wZ +. (Random.float worldRadius *. 2. -. worldRadius) in
-			vec3f x y z 
-		in make (makeRandomCenter()) radius (Material.make (Color.randColor()))
+		let randCenter = Vec3f.randVec worldCenter worldRadius in
+		make randCenter radius (Material.randMaterial ())
 
 	let checkIntersection sphere (ray:Ray.t) = 
 		let dist = Vec3f.sub (Ray.origin ray) sphere.center in
@@ -38,10 +39,10 @@ struct
 			else
 				let discSqrt = sqrt disc in
 				let t = (-.b -. discSqrt) /. denom in
-				if t > Ray.epsilon then Some(Intersection.make t (Ray.pointAt ray t) sphere.material)
+				if t > Ray.epsilon then Some(Intersection.make t (Ray.pointAt ray t) (Material.get sphere.material))
 				else 
 					let t = (-.b +. discSqrt) /. denom in
-					if t > Ray.epsilon then Some(Intersection.make t (Ray.pointAt ray t) sphere.material)
+					if t > Ray.epsilon then Some(Intersection.make t (Ray.pointAt ray t) (Material.get sphere.material))
 					else None
 
 end
