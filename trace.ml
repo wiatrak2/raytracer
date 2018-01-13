@@ -34,6 +34,6 @@ struct
 	let traceRay (ray: Ray.t) (world: World.t) =
 		let (nearestIntersection, intersectedObject) = getIntersection ray world in
 		match nearestIntersection with
-			| None -> (World.getBackgroundColor world, None)
-			| Some intersection -> (Intersection.getColor intersection, intersectedObject)
+			| None -> (World.getBackgroundColor world, None, (vec3f 0. 0. 0.))
+			| Some intersection -> (Intersection.getColor intersection, intersectedObject, (Intersection.getPoint intersection))
 end		

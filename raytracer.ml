@@ -17,8 +17,12 @@ let trace (camera: Camera.t) (world: World.t)  =
 		for j = 0 to (w - 1) do
 			let rayDir = Camera.getRayDir camera j (h-i) in
 			let ray = Ray.make origin rayDir in
-			let (col, _) = Trace.traceRay ray world in
-			Screen.setPixel screen (j + (w*i)) col;
+			let (col, intersected, point) = Trace.traceRay ray world in
+				match intersected with
+					| None -> Screen.setPixel screen (j + (w*i)) col;
+					| Some intersected -> 
+						let col = Light.getShadedColor intersected point ray (List.hd @@ World.getLights world) world in
+						Screen.setPixel screen (j + (w*i)) col;
 		done;
 	done;
 	output "output.ppm" screen

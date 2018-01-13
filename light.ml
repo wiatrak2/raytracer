@@ -30,10 +30,10 @@ struct
 		let normal = Object.getNormal singleObject point in
 		let reflectRay = Ray.make point @@ Vec3f.reflectVec (Ray.direction ray) normal in
 		let worldColor = World.getBackgroundColor world in
-		let (reflectColor, _) = Trace.traceRay reflectRay world in
+		let reflectColor = Trace.traceRay reflectRay world in
 		match reflectColor with 
-			| worldColor -> vec3f 0. 0. 0.
-			| col -> 
+			| (_, None, _) -> vec3f 0. 0. 0.
+			| (col, _, _) -> 
 				let (x,y,z) = Color.get col in
 				let vec = vec3f x y z in
 				let objectMat = Object.getMaterial singleObject in
