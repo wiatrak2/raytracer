@@ -32,6 +32,8 @@ struct
 		in singleLightLambert lights 0.
 		
 	let specularShading (singleObject: objectType) (point: Vec3f.vec3) (ray: Ray.t) (world: World.t) =
+		let objectMat = (Object.getMaterial singleObject) in
+		if objectMat.specular = 0. then vec3f 0. 0. 0. else
 		let normal = Object.getNormal singleObject point in
 		let reflectRay = Ray.make point @@ Vec3f.reflectVec (Ray.direction ray) normal in
 		let reflectColor = Trace.traceRay reflectRay world in
@@ -40,7 +42,6 @@ struct
 			| (col, _, _) -> 
 				let (x,y,z) = Color.get col in
 				let vec = vec3f x y z in
-				let objectMat = Object.getMaterial singleObject in
 				Vec3f.smul objectMat.specular vec
 	
 	let getShadedColor (singleObject: objectType) (point: Vec3f.vec3) (ray: Ray.t) (lights: LightSource.t list) (world: World.t) =
@@ -50,10 +51,12 @@ struct
 		let objectColorVec = vec3f x y z in
 		let lambertAmount = lambertShading singleObject point lights world in
 		let lambertAmount = min lambertAmount 1. in
+		let lambertAmount = max 0. lambertAmount in
 		let specVec = specularShading singleObject point ray world in
 		let ambientVec = Vec3f.smul objectMaterial.ambient objectColorVec in
 		let lambertVec = Vec3f.smul (lambertAmount *. objectMaterial.lambert) objectColorVec in
 		let finalColorVec = Vec3f.add specVec @@ Vec3f.add ambientVec lambertVec in
 		let (x, y, z) = Vec3f.get finalColorVec in
 		Color.make x y z
+		
 end

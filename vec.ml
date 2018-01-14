@@ -31,7 +31,8 @@ struct
 	let sub v1 v2 = { x = v1.x -. v2.x ; y = v1.y -. v2.y ; z = v1.z -. v2.z }
 	let mul v1 v2 = { x = v1.x *. v2.x ; y = v1.y *. v2.y ; z = v1.z *. v2.z }
 	let div v1 v2 = { x = v1.x /. v2.x ; y = v1.y /. v2.y ; z = v1.z /. v2.z }
-	let smul s v = { x = s *. v.x ; y = s *. v.y ; z = s *. v.z }
+  let smul s v = { x = s *. v.x ; y = s *. v.y ; z = s *. v.z }
+  let sadd c v = { x = c +. v.x ; y = c +. v.y ; z = c +. v.z }
 	let dot v1 v2 = v1.x *. v2.x +. v1.y *. v2.y +. v1.z *. v2.z
 	let abs v = sqrt @@ dot v v
 	let len2 v = dot v v
@@ -51,7 +52,7 @@ struct
 	let reflectVec vec normal =
 		let dotProduct = dot vec normal in
 		let d = smul dotProduct normal in
-		sub (smul 2. d) vec
+		sub vec (smul 2. d) 
 		
 	let printVec v = Printf.printf "%.2f %.2f %.2f\n" v.x v.y v.z
 end

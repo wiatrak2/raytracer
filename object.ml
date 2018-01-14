@@ -1,20 +1,34 @@
 open Sphere
+open Plane
 open Ray
 open Vec
 
-type objectType = Sphere.t
+type objectType =
+  | Sphere_ of Sphere.t
+  | Plane_ of Plane.t
 
 module Object =
 struct
+	let make singleObject =
+		match singleObject with
+			| Sphere_(sphere) -> Sphere_(sphere)
+			| Plane_(plane) -> Plane_(plane)
+
 	let checkIntersection singleObject (ray:Ray.t) =
-	match singleObject with
-			| _ -> Sphere.checkIntersection singleObject ray
+		match singleObject with
+    		| Sphere_(sphere) -> Sphere.checkIntersection sphere ray
+      		| Plane_(plane) -> Plane.checkIntersection plane ray
 
 	let getNormal singleObject (point: Vec3f.vec3) = 
 		match singleObject with
-			| _ -> Sphere.getNormal singleObject point
+			| Sphere_(sphere) -> Sphere.getNormal sphere point
+      		| Plane_(plane) -> Plane.getNormal plane
 
 	let getMaterial singleObject =
 		match singleObject with
-			| _ -> Sphere.getMaterial singleObject
+			| Sphere_(sphere) -> Sphere.getMaterial sphere
+     		| Plane_(plane) -> Plane.getMaterial plane
+
+	let makeRandomObject (maxRadius: float) (worldCenter: Vec3f.vec3) (worldRadius: float) =
+		Sphere_(Sphere.makeRandomSphere maxRadius worldCenter worldRadius)
 end

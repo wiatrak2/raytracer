@@ -13,7 +13,7 @@ struct
 	}
 	let origin r = r.origin
 	let direction r = r.direction
-	let epsilon = 0.001
+	let epsilon = 0.0001
 
 	let pointAt ray (t:float) = Vec3f.add ray.origin (Vec3f.smul t ray.direction)
 end

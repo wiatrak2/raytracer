@@ -22,11 +22,11 @@ struct
 	
 	let getObjects world = world.objects
 	let getLights world = world.lights
-  	let getBackground world = world.background
+	let getBackground world = world.background
 	let getBackgroundColor world = Material.get world.background
 
-	let addSphere world (sphere: Sphere.t) = 
-		world.objects = sphere::world.objects
+	let addObject world (singleObject: objectType) = 
+		world.objects = singleObject::world.objects
 
 	let createRandWorld (maxObjects: int) (maxRadius: float) ?(lightsNum = 1) (worldCenter: Vec3f.vec3) (worldRadius: float) =
 		let objectsNum = Random.int maxObjects + 1 in
@@ -42,8 +42,8 @@ struct
 			match objectsNum with
 				| 0 -> objects
 				| _ -> 
-					let randSphere = Sphere.makeRandomSphere maxRadius worldCenter worldRadius in
-					aux (objectsNum - 1) (randSphere::objects)
+					let randObject = Object.makeRandomObject maxRadius worldCenter worldRadius in
+					aux (objectsNum - 1) (randObject::objects)
 		in let objects = aux objectsNum [] in
 		make objects lights (Material.randMaterial()) 
 end
