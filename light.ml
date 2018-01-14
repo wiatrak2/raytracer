@@ -51,12 +51,11 @@ struct
 		let objectColorVec = vec3f x y z in
 		let lambertAmount = lambertShading singleObject point lights world in
 		let lambertAmount = min lambertAmount 1. in
-		let lambertAmount = max 0. lambertAmount in
 		let specVec = specularShading singleObject point ray world in
 		let ambientVec = Vec3f.smul objectMaterial.ambient objectColorVec in
 		let lambertVec = Vec3f.smul (lambertAmount *. objectMaterial.lambert) objectColorVec in
 		let finalColorVec = Vec3f.add specVec @@ Vec3f.add ambientVec lambertVec in
 		let (x, y, z) = Vec3f.get finalColorVec in
+		let x, y, z = min 1. x, min 1. y, min 1. z in
 		Color.make x y z
-		
 end

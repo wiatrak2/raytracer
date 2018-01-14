@@ -23,10 +23,11 @@ struct
 							nearestIntersection := intersectionTest;
 							intersectedObject := Some(singleObject);
 						| Some existingIntersection ->
-							let currentT, newT = (Intersection.getT existingIntersection), (Intersection.getT intersection) in
-							if newT < currentT then 
+							let (currentT, newT) = ((Intersection.getT existingIntersection), (Intersection.getT intersection)) in
+							if newT < currentT then begin
 								nearestIntersection := intersectionTest;
 								intersectedObject := Some(singleObject);
+							end
 		in List.iter (fun x -> checkIntersection x) (World.getObjects world);
 		(!nearestIntersection, !intersectedObject)
 
