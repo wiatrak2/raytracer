@@ -51,8 +51,8 @@ struct
     make x y z
 	let reflectVec vec normal =
 		let dotProduct = dot vec normal in
-		let d = smul dotProduct normal in
-		sub vec (smul 2. d) 
+		let d = smul (2. *. dotProduct) normal in
+		sub d vec
 		
 	let printVec v = Printf.printf "%.2f %.2f %.2f\n" v.x v.y v.z
 end

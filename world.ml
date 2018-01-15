@@ -28,7 +28,7 @@ struct
 	let addObject world (singleObject: objectType) = 
 		world.objects = singleObject::world.objects
 
-	let createRandWorld (maxObjects: int) (maxRadius: float) ?(lightsNum = 1) (worldCenter: Vec3f.vec3) (worldRadius: float) =
+	let createRandWorld (maxObjects: int) (maxRadius: float) ?(lightsNum: int = 1) (worldCenter: Vec3f.vec3) (worldRadius: float) =
 		let objectsNum = Random.int maxObjects + 1 in
 		let rec makeRandLights lightsNum lights =
 			match lightsNum with

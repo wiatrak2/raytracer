@@ -76,7 +76,7 @@ struct
 	let getScreen camera = camera.screen
 	let getOrigin camera = camera.origin
 
-	let make (origin: Vec3f.vec3) (lookAt: Vec3f.vec3) ?(up = vec3f 0. 1. 0.) (fov: float) (res: int * int)  =
+	let make (origin: Vec3f.vec3) (lookAt: Vec3f.vec3) ?(up: Vec3f.vec3 = vec3f 0. 1. 0.) (fov: float) (res: int * int)  =
 		let (width, height) = res in
 		let ortb = OrtBase.make origin lookAt up in
 		let pi = 3.1415926536 in

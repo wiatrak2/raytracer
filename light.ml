@@ -24,36 +24,35 @@ struct
 					match isVisible light point world with
 						| false -> singleLightLambert tl acc
 						| true  -> 
-							let contr = Vec3f.sub (LightSource.get light) point in
-							let unitContr = Vec3f.norm contr in
-							let contribution = Vec3f.dot unitContr @@ Object.getNormal singleObject point in
-							if contribution > 0. then singleLightLambert tl (acc +. contribution)
+							let lightDir = Vec3f.sub (LightSource.get light) point in
+							let unitLightDir = Vec3f.norm lightDir in
+							let coefficient = Vec3f.dot unitLightDir @@ Object.getNormal singleObject point in
+							if coefficient > 0. then singleLightLambert tl (acc +. coefficient)
 							else singleLightLambert tl acc
 		in singleLightLambert lights 0.
 		
-	let specularShading (singleObject: objectType) (point: Vec3f.vec3) (ray: Ray.t) (world: World.t) =
-		let objectMat = (Object.getMaterial singleObject) in
-		if objectMat.specular = 0. then vec3f 0. 0. 0. else
+	let phongShading (singleObject: objectType) (point: Vec3f.vec3) (ray: Ray.t) (light: LightSource.t) ?(n: float = 10.) (world: World.t) =
+		if not (isVisible light point world) then 0. else
 		let normal = Object.getNormal singleObject point in
-		let reflectRay = Ray.make point @@ Vec3f.reflectVec (Ray.direction ray) normal in
-		let reflectColor = Trace.traceRay reflectRay world in
-		match reflectColor with 
-			| (_, None, _) -> vec3f 0. 0. 0.
-			| (col, _, _) -> 
-				let (x,y,z) = Color.get col in
-				let vec = vec3f x y z in
-				Vec3f.smul objectMat.specular vec
+		let lightDir = Vec3f.sub (LightSource.get light) point in
+		let unitLightDir = Vec3f.norm lightDir in
+		let v = Vec3f.norm @@ Vec3f.sub (Ray.origin ray) point in
+		let r = Vec3f.reflectVec unitLightDir normal in
+		let vDotR = Vec3f.dot v r in
+		let phong = max 0. vDotR in
+		phong ** n
 	
 	let getShadedColor (singleObject: objectType) (point: Vec3f.vec3) (ray: Ray.t) (lights: LightSource.t list) (world: World.t) =
 		let objectMaterial = Object.getMaterial singleObject in
 		let objectColor = Material.get objectMaterial in
 		let (x, y, z) = Color.get objectColor in
 		let objectColorVec = vec3f x y z in
-		let lambertAmount = lambertShading singleObject point lights world in
-		let lambertAmount = min lambertAmount 1. in
-		let specVec = specularShading singleObject point ray world in
+		let lambertCoefficient = lambertShading singleObject point lights world in
+		let lambertCoefficient = min lambertCoefficient 1. in
+		let specCoefficient = phongShading singleObject point ray (List.hd lights) world in 
+		let specVec = Vec3f.smul (specCoefficient *. objectMaterial.specular) objectColorVec in
 		let ambientVec = Vec3f.smul objectMaterial.ambient objectColorVec in
-		let lambertVec = Vec3f.smul (lambertAmount *. objectMaterial.lambert) objectColorVec in
+		let lambertVec = Vec3f.smul (lambertCoefficient *. objectMaterial.lambert) objectColorVec in
 		let finalColorVec = Vec3f.add specVec @@ Vec3f.add ambientVec lambertVec in
 		let (x, y, z) = Vec3f.get finalColorVec in
 		let x, y, z = min 1. x, min 1. y, min 1. z in

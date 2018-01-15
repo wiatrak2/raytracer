@@ -57,13 +57,13 @@ let plane1 = Plane.make (vec3f 25. (-3.) (-30.)) (Vec3f.norm(vec3f 0.4 0. 1.)) m
 let plane1 = Object.Plane_(plane1)
 *)
 
-let mat1 = Material.make (Color.randColor()) 0.4 0.7 0.;;
+let mat1 = Material.make (Color.randColor()) 0.4 0.7 0.6;;
 let sphere1 = Sphere.make (vec3f (-3.) 0. 4.) 2. mat1;;
 let sphere1 = Object.Sphere_(sphere1);;
-let mat2 = Material.make (Color.randColor()) 0.2 0.9 0.;;
+let mat2 = Material.make (Color.randColor()) 0.2 0.9 0.4;;
 let sphere2 = Sphere.make (vec3f 0. 0. 0.) 2. mat2;;
 let sphere2 = Object.Sphere_(sphere2);;
-let mat3 = Material.make (Color.randColor()) 0.1 0.7 0.1;;
+let mat3 = Material.make (Color.randColor()) 0.1 0.7 0.8;;
 let sphere3 = Sphere.make (vec3f 3. 0. 3.) 2. mat3;;
 let sphere3 = Object.Sphere_(sphere3);;
 let mat4 = Material.make (Color.make 0.8 0.3 0.3) 0. 0.7 0.2;;
