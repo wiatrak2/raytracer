@@ -47,7 +47,7 @@ struct
 			aspectRatio = w /. h;
 			pixelW = w /. (float_of_int wr);
 			pixelH = h /. (float_of_int hr);
-			pixels = Array.make (wr * hr) zero;
+			pixels = Array.make (wr * hr) zeroColor;
 		}
 
 	let getRes screen = screen.res

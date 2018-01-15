@@ -1,3 +1,5 @@
+open Vec
+
 module Color = 
 struct
 	type t = {
@@ -9,6 +11,11 @@ struct
 	let make (r: float) (g: float) (b: float) = { r = r; g = g; b = b }
 	let get color = (color.r, color.g, color.b)
 
+	let colorToVec color = Vec3f.make color.r color.g color.b
+	let vecToColoer(vec: Vec3f.vec3) = 
+		let (r, g, b) = Vec3f.get vec in
+		make r g b 
+
 	let randColor () = {
 		r = Random.float 1.;
 		g = Random.float 1.;
@@ -16,32 +23,46 @@ struct
 	}
 end
 
-let zero = Color.make 0. 0. 0.
+let zeroColor = Color.make 0. 0. 0.
 
 module Material =
 struct
 	type t = {
 		color: Color.t;
 		ambient: float;
+		mirror: float;
 		lambert: float;
 		specular: float;
 	}
 
-	let make (color: Color.t) (ambient: float) (lambert: float) (specular: float) = 
+	let make (color: Color.t) (ambient: float) ?(mirror: float = 0.) (lambert: float) (specular: float) =
+	if ambient = 0. then
 	{
 		color = color;
 		ambient = ambient;
+		mirror = mirror;
 		lambert = lambert;
 		specular = specular;
 	}
-
+	else 
+	{
+		color = color;
+		ambient = ambient;
+		mirror = 0.;
+		lambert = lambert;
+		specular = specular;
+	}
+	
 	let randMaterial () =
 	{
 		color = Color.randColor();
 		ambient = Random.float 1.;
+		mirror = 0.;
 		lambert = Random.float 1.;
 		specular = Random.float 1.;
 	}
 	
 	let get material = material.color
+	let getCoefficients material = (material.ambient, material.mirror, material.lambert, material.specular)
+
 end
