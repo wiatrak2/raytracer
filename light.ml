@@ -57,7 +57,7 @@ struct
 		let(ambient, mirror, lambert, specular) = Material.getCoefficients objectMaterial in
 		let specVec = Vec3f.smul (specCoefficient *. specular) objectColorVec in
 		let ambientVec = Vec3f.smul ambient objectColorVec in
-		
+
 		let mirrorColor = mirrorReflection singleObject point ray reflectDepth world in
 		let mirrorColorVec = Color.colorToVec mirrorColor in 
 		let mirrorColorCoeff = Vec3f.smul mirror mirrorColorVec in
@@ -81,4 +81,5 @@ struct
 					getShadedColor intersected intersectPoint reflectedRay (reflectDepth - 1) world
 				else 
 					objectColor
+		
 end

@@ -7,6 +7,9 @@ type objectType =
   | Sphere_ of Sphere.t
   | Plane_ of Plane.t
 
+let sphereToObject (sphere: Sphere.t) = Sphere_(sphere)
+let planeToObject (plane: Plane.t) = Plane_(plane)
+
 module Object =
 struct
 	let make singleObject =
@@ -31,4 +34,7 @@ struct
 
 	let makeRandomObject (maxRadius: float) (worldCenter: Vec3f.vec3) (worldRadius: float) =
 		Sphere_(Sphere.makeRandomSphere maxRadius worldCenter worldRadius)
+
+	let sphereToObject (sphere: Sphere.t) = Sphere_(sphere)
+	let planeToObject (plane: Plane.t) = Plane_(plane)
 end

@@ -1,0 +1,78 @@
+{
+	"spheres": [
+		{
+			"center": [-3.0, 0.0 ,4.0],
+			"radius": 2.0,
+			"color": [0.7, 0.55, 0.6],
+			"ambient": 0.4,
+			"mirror": 0.0,
+			"lambert": 0.7,
+			"specular": 0.6
+		},
+		{
+			"center": [0.0, 0.0, 0.0],
+			"radius": 2.0,
+			"color": [0.5, 0.6, 0.7],
+			"ambient": 0.2,
+			"mirror": 0.0,
+			"lambert": 0.9,
+			"specular": 0.4
+		},
+		{
+			"center": [6.0, 2.0, 1.0],
+			"radius": 4.0,
+			"color": [0.65, 0.3, 0.2],
+			"ambient": 0.3,
+			"mirror": 0.0,
+			"lambert": 0.7,
+			"specular": 0.6
+		},
+		{
+			"center": [-10.0, 4.0, -5.0],
+			"radius": 6.0,
+			"color": [0.8, 0.1, 0.3],
+			"ambient": 0.0,
+			"mirror": 0.5,
+			"lambert": 0.9,
+			"specular": 0.7
+		}
+	],
+	"planes": [
+		{
+			"point": [0.0, -2.0, 0.0],
+			"norm": [0.0, 1.0, 0.0],
+			"color": [0.67, 0.85, 1.0],
+			"ambient": 0.0,
+			"mirror": 0.9,
+			"lambert": 0.3,
+			"specular": 0.2
+		}
+	],
+	"lights": [
+		{
+			"center": [-30.0, 10.0, 20.0]
+		},
+		{
+			"center": [10.0, 8.0, -1.00]
+		}
+	],
+	"camera":
+	{
+		"origin": [0.0, 0.0, 28.0],
+		"lookAt": [0.0, 0.0, 0.0],
+		"fov": 60.0,
+		"w": 1920,
+		"h": 1080
+		
+	},
+	"world":
+	{
+		"reflectDepth": 6,
+		"color": [0.5, 0.5, 0.5],
+		"ambient": 0.0,
+		"mirror": 0.0,
+		"lambert": 0.7,
+		"specular": 0.0
+	},
+	"output": "output.ppm"
+}

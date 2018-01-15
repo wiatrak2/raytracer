@@ -1,13 +1,9 @@
 all: raytracer
 
 raytracer:
-	ocamlc -g -o raytracer vec.ml material.ml ray.ml intersection.ml sphere.ml plane.ml object.ml lightSource.ml camera.ml world.ml output.ml trace.ml light.ml raytracer.ml
-	rm -f *.c*
+	ocamlfind ocamlopt -g -o raytracer vec.ml material.ml ray.ml intersection.ml sphere.ml plane.ml object.ml lightSource.ml camera.ml world.ml output.ml trace.ml light.ml raytracer.ml input.ml main.ml -package yojson -linkpkg
 
-debug:
-	ocamlc -g -o raytracer vec.ml material.ml ray.ml intersection.ml sphere.ml plane.ml object.ml lightSource.ml camera.ml world.ml output.ml trace.ml light.ml raytracer.ml
-	
 clean:
-	rm -f *.c* raytracer output.ppm
+	rm -f *.c* *.o raytracer output.ppm
 
 .PHONY: clean raytracer

@@ -53,7 +53,11 @@ struct
 		let dotProduct = dot vec normal in
 		let d = smul (2. *. dotProduct) normal in
 		sub d vec
-		
+  let listToVec list = 
+    match list with
+      | [x; y; z] -> make x y z
+      | _ -> raise (Invalid_argument "Error while creating vector")
+      
 	let printVec v = Printf.printf "%.2f %.2f %.2f\n" v.x v.y v.z
 end
 

@@ -12,7 +12,7 @@ struct
 	let get color = (color.r, color.g, color.b)
 
 	let colorToVec color = Vec3f.make color.r color.g color.b
-	let vecToColoer(vec: Vec3f.vec3) = 
+	let vecToColor(vec: Vec3f.vec3) = 
 		let (r, g, b) = Vec3f.get vec in
 		make r g b 
 
