@@ -67,12 +67,14 @@
 	},
 	"world":
 	{
-		"reflectDepth": 6,
+		"reflectDepth": 10,
 		"color": [0.5, 0.5, 0.5],
 		"ambient": 0.0,
 		"mirror": 0.0,
 		"lambert": 0.7,
 		"specular": 0.0
 	},
-	"output": "output.ppm"
+	"output": "output.ppm",
+	"brightnessTarget": 0.4,
+	"gammaCorrection": true
 }

@@ -1,15 +1,10 @@
 open Camera
 open Vec
 open Ray
-open Sphere
-open Plane
 open Intersection
-open Material
 open Trace
 open World
 open Light
-open Output
-open LightSource
 
 module Raytracer = 
 struct
