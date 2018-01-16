@@ -12,9 +12,10 @@ struct
     direction = Vec3f.norm direction;
     intensity = intensity;
     }
-  let get light = light.direction
+  let getSource light = Vec3f.smul (-1.) light.direction
   let getIntensity light (norm: Vec3f.vec3) = light.intensity
 
+  let lightDir light (point: Vec3f.vec3) = Vec3f.smul (-1.) light.direction
   let distanceSqToLight light (point: Vec3f.vec3) = 1.
 end
 
@@ -29,8 +30,11 @@ struct
     source = source;
     intensity = intensity;
     }
-  let get light = light.source
+  let getSource light = light.source
   let getIntensity light (norm: Vec3f.vec3) = light.intensity
+
+  let lightDir light (point: Vec3f.vec3) =
+    Vec3f.norm @@ Vec3f.sub light.source point
 
   let distanceSqToLight light (point: Vec3f.vec3) = 
     let subPoints = Vec3f.sub point light.source in
@@ -49,15 +53,20 @@ struct
       | UniformLight_(uLight) -> UniformLight_(uLight)
       | PointLight_(pLight) -> PointLight_(pLight)
 
-  let get light = 
+  let getSource light = 
     match light with
-      | UniformLight_(uLight) -> UniformLight.get(uLight)
-      | PointLight_(pLight) -> PointLight.get(pLight)
+      | UniformLight_(uLight) -> UniformLight.getSource(uLight)
+      | PointLight_(pLight) -> PointLight.getSource(pLight)
 
   let getIntensity light = 
     match light with
       | UniformLight_(uLight) -> UniformLight.getIntensity(uLight)
       | PointLight_(pLight) -> PointLight.getIntensity(pLight)
+
+  let lightDir light = 
+    match light with
+      | UniformLight_(uLight) -> UniformLight.lightDir(uLight)
+      | PointLight_(pLight) -> PointLight.lightDir(pLight)
 
   let distanceSqToLight light = 
     match light with

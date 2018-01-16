@@ -15,7 +15,7 @@ struct
     Vec3f.dot subPoints subPoints
 
 	let isVisible (light: lightSource) (point: Vec3f.vec3) (world: World.t) =
-		let photonRay = Ray.make point (LightSource.get light) in
+		let photonRay = Ray.make point (LightSource.getSource light) in
 		let (lightVisibility, _) = Trace.getIntersection photonRay world in
 		match lightVisibility with 
 			| None -> true
@@ -36,9 +36,8 @@ struct
 					match isVisible light point world with
 						| false -> singleLightLambert tl acc
 						| true  -> 
-							let lightDir = Vec3f.sub (LightSource.get light) point in
-							let unitLightDir = Vec3f.norm lightDir in
-              let coefficient = Vec3f.dot unitLightDir @@ Object.getNormal singleObject point in
+							let lightDir = LightSource.lightDir light point in
+              let coefficient = Vec3f.dot lightDir @@ Object.getNormal singleObject point in
               let distSq = LightSource.distanceSqToLight light point in
               let normal = Object.getNormal singleObject point in
               let lightIntensity = (LightSource.getIntensity light normal) /. distSq in
@@ -53,10 +52,9 @@ struct
 				| light::tl ->
 					if not (isVisible light point world) then singleLightPhong tl acc else
 					let normal = Object.getNormal singleObject point in
-					let lightDir = Vec3f.sub (LightSource.get light) point in
-					let unitLightDir = Vec3f.norm lightDir in
+					let lightDir = LightSource.lightDir light point in
 					let v = Vec3f.norm @@ Vec3f.sub (Ray.origin ray) point in
-					let r = Vec3f.reflectVec unitLightDir normal in
+					let r = Vec3f.reflectVec lightDir normal in
 					let vDotR = Vec3f.dot v r in
           let phong = max 0. vDotR in
           let distSq = LightSource.distanceSqToLight light point in

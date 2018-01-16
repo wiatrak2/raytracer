@@ -59,7 +59,10 @@
 		}
 	],
 	"uniformLights": [
-		
+		{
+			"direction": [0.0, 0.0, -1.0],
+			"intensity": 0.2
+		}
 	],
 	"camera":
 	{
