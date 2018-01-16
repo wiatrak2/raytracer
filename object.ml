@@ -20,17 +20,17 @@ struct
 	let checkIntersection singleObject (ray:Ray.t) =
 		match singleObject with
     		| Sphere_(sphere) -> Sphere.checkIntersection sphere ray
-      		| Plane_(plane) -> Plane.checkIntersection plane ray
+      	| Plane_(plane) -> Plane.checkIntersection plane ray
 
 	let getNormal singleObject (point: Vec3f.vec3) = 
 		match singleObject with
 			| Sphere_(sphere) -> Sphere.getNormal sphere point
-      		| Plane_(plane) -> Plane.getNormal plane
+      | Plane_(plane) -> Plane.getNormal plane
 
 	let getMaterial singleObject =
 		match singleObject with
 			| Sphere_(sphere) -> Sphere.getMaterial sphere
-     		| Plane_(plane) -> Plane.getMaterial plane
+      | Plane_(plane) -> Plane.getMaterial plane
 
 	let makeRandomObject (maxRadius: float) (worldCenter: Vec3f.vec3) (worldRadius: float) =
 		Sphere_(Sphere.makeRandomSphere maxRadius worldCenter worldRadius)

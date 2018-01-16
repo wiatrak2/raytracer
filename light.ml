@@ -3,18 +3,30 @@ open Ray
 open Material
 open Object
 open World
+open Intersection
 open Trace
 open LightSource
 
 module Light = 
 struct
 
-	let isVisible (light: LightSource.t) (point: Vec3f.vec3) (world: World.t) =
+  let distSqToPoint (point1: Vec3f.vec3) (point2: Vec3f.vec3) =
+    let subPoints = Vec3f.sub point1 point2 in
+    Vec3f.dot subPoints subPoints
+
+	let isVisible (light: lightSource) (point: Vec3f.vec3) (world: World.t) =
 		let photonRay = Ray.make point (LightSource.get light) in
 		let (lightVisibility, _) = Trace.getIntersection photonRay world in
 		match lightVisibility with 
 			| None -> true
-			| _ -> false
+      | Some intersection -> 
+        match light with
+        | UniformLight_(uLight) -> false
+        | _ ->
+            let intersectionPoint = Intersection.getPoint intersection in
+            let distSqToIntersection = distSqToPoint point intersectionPoint in
+            let distSqToLight = LightSource.distanceSqToLight light point in
+            if distSqToIntersection < distSqToLight then false else true
 
 	let lambertShading (singleObject: objectType) (point: Vec3f.vec3) (world: World.t) =
 		let rec singleLightLambert lights acc =
@@ -26,8 +38,11 @@ struct
 						| true  -> 
 							let lightDir = Vec3f.sub (LightSource.get light) point in
 							let unitLightDir = Vec3f.norm lightDir in
-							let coefficient = Vec3f.dot unitLightDir @@ Object.getNormal singleObject point in
-							if coefficient > 0. then singleLightLambert tl (acc +. coefficient)
+              let coefficient = Vec3f.dot unitLightDir @@ Object.getNormal singleObject point in
+              let distSq = LightSource.distanceSqToLight light point in
+              let normal = Object.getNormal singleObject point in
+              let lightIntensity = (LightSource.getIntensity light normal) /. distSq in
+              if coefficient > 0. then singleLightLambert tl (acc +. (coefficient *. lightIntensity))
 							else singleLightLambert tl acc
 		in singleLightLambert (World.getLights world) 0.
 		
@@ -43,8 +58,10 @@ struct
 					let v = Vec3f.norm @@ Vec3f.sub (Ray.origin ray) point in
 					let r = Vec3f.reflectVec unitLightDir normal in
 					let vDotR = Vec3f.dot v r in
-					let phong = max 0. vDotR in
-					singleLightPhong tl @@ acc +. phong ** n
+          let phong = max 0. vDotR in
+          let distSq = LightSource.distanceSqToLight light point in
+          let lightIntensity = (LightSource.getIntensity light normal) /. distSq in    
+					singleLightPhong tl @@ acc +. (lightIntensity *. phong ** n)
 		in singleLightPhong (World.getLights world) 0.
 	
 	let rec getShadedColor (singleObject: objectType) (point: Vec3f.vec3) (ray: Ray.t) (reflectDepth: int) (world: World.t) =

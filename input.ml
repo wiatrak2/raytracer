@@ -55,20 +55,33 @@ struct
                 |> List.map to_float |> Vec3f.listToVec in
       let lookAt = json |> member "lookAt" |> to_list 
                 |> List.map to_float |> Vec3f.listToVec in
+      let up = json |> member "up" |> to_list 
+                |> List.map to_float |> Vec3f.listToVec in
       let width = json |> member "w" |> to_int in
       let height = json |> member "h" |> to_int in
       let fov = json |> member "fov" |> to_float in
-      Camera.make origin lookAt fov (width, height)
+      Camera.make origin lookAt ~up:up fov (width, height)
     with
       | e -> Printf.printf "Could not load camera\n"; raise e
 
 
-  let parseLight json = 
+  let parsePointLight json = 
     try
       let open Yojson.Basic.Util in 
       let center = json |> member "center" |> to_list 
                 |> List.map to_float |> Vec3f.listToVec in
-      LightSource.make center
+      let intensity = json |> member "intensity" |> to_float in
+      PointLight.make center intensity
+    with
+      | e -> Printf.printf "Could not load light\n"; raise e
+
+  let parseUniformLight json =
+    try
+      let open Yojson.Basic.Util in 
+      let direction = json |> member "direction" |> to_list 
+                |> List.map to_float |> Vec3f.listToVec in
+      let intensity = json |> member "intensity" |> to_float in
+      UniformLight.make direction intensity
     with
       | e -> Printf.printf "Could not load light\n"; raise e
 
@@ -99,8 +112,11 @@ struct
     let planes = inputJSON |> member "planes" |> to_list |> List.map parsePlane in
     let spheres = List.map Object.sphereToObject spheres in
     let planes = List.map Object.planeToObject planes in
-    let lights = inputJSON |> member "lights" |> to_list |> List.map parseLight in
+    let pointLights = inputJSON |> member "pointLights" |> to_list |> List.map parsePointLight in
+    let pointLights = List.map LightSource.pointLight pointLights in
+    let uniformLights = inputJSON |> member "uniformLights" |> to_list |> List.map parseUniformLight in
+    let uniformLights = List.map LightSource.uniformLight uniformLights in
     let (matW, reflectDepth) = inputJSON |> member "world" |> parseConstants in
-    let world = World.make (spheres @ planes) lights matW in
+    let world = World.make (spheres @ planes) (pointLights @ uniformLights) matW in
     (camera, screen, world, reflectDepth, outputFile, gammaCorrection, brightnessTarget)
 end

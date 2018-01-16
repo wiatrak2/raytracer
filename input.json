@@ -48,18 +48,24 @@
 			"specular": 0.2
 		}
 	],
-	"lights": [
+	"pointLights": [
 		{
-			"center": [-30.0, 10.0, 20.0]
+			"center": [-30.0, 10.0, 20.0],
+			"intensity": 500.0
 		},
 		{
-			"center": [10.0, 8.0, -1.00]
+			"center": [10.0, 8.0, -1.0],
+			"intensity": 200.0
 		}
+	],
+	"uniformLights": [
+		
 	],
 	"camera":
 	{
 		"origin": [0.0, 0.0, 28.0],
 		"lookAt": [0.0, 0.0, 0.0],
+		"up": [0.0, 1.0, 0.0],
 		"fov": 60.0,
 		"w": 1920,
 		"h": 1080
@@ -76,5 +82,5 @@
 	},
 	"output": "output.ppm",
 	"brightnessTarget": 0.4,
-	"gammaCorrection": true
+	"gammaCorrection": false
 }
