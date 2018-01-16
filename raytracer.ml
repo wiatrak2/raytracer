@@ -6,6 +6,7 @@ open Trace
 open World
 open Light
 
+(* for each pixel of the image compute its color *)
 module Raytracer = 
 struct
 	let trace ?(reflectDepth: int = 3) (camera: Camera.t) (world: World.t) = 

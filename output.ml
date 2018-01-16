@@ -3,6 +3,8 @@ open Material
 
 module Output =
 struct
+
+  (* for given brightness target from range rgb compute exponent for gamma correction *)
   let gammaCoefficient (screen: Screen.t) (brightnessTarget: float) (gammaCorrection: bool) =
     if not gammaCorrection then 1. else
     let sumColor (acc: float) (color: Color.t) =
@@ -13,6 +15,7 @@ struct
     let avgBrightness = pixelSum /. (float_of_int pixelNum) in
     (log brightnessTarget) /. (log avgBrightness)
 
+  (* write pixels to output ppm file *)
   let output (filename: string) (brightnessTarget: float) ?(gammaCorrection: bool = false) (screen: Screen.t) = 
     let outFile = open_out filename in
     let (w,h) = Screen.getRes screen in 

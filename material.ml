@@ -1,5 +1,6 @@
 open Vec
 
+(* module representing color, with each of rgb values in range 0-1 *)
 module Color = 
 struct
 	type t = {
@@ -25,6 +26,10 @@ end
 
 let zeroColor = Color.make 0. 0. 0.
 
+(* 
+  module representing material of object,
+  with coefficients needed to compute lambert/phong/ambient/mirror reflection 
+*)
 module Material =
 struct
 	type t = {

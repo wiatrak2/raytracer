@@ -3,6 +3,7 @@ open Plane
 open Ray
 open Vec
 
+(* wrapper over spheres and planes *)
 type objectType =
   | Sphere_ of Sphere.t
   | Plane_ of Plane.t
@@ -19,8 +20,8 @@ struct
 
 	let checkIntersection singleObject (ray:Ray.t) =
 		match singleObject with
-    		| Sphere_(sphere) -> Sphere.checkIntersection sphere ray
-      	| Plane_(plane) -> Plane.checkIntersection plane ray
+    	| Sphere_(sphere) -> Sphere.checkIntersection sphere ray
+    	| Plane_(plane) -> Plane.checkIntersection plane ray
 
 	let getNormal singleObject (point: Vec3f.vec3) = 
 		match singleObject with

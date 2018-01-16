@@ -8,6 +8,11 @@ open World
 
 module Trace = 
 struct
+  (*
+    for given ray and world check, if the ray intersects with any of world's object
+    if so return Intersection object of the nearest intersection and Object representing
+    the intersected object
+  *)
 	let getIntersection (ray: Ray.t) (world: World.t) = 
 		
 		let nearestIntersection: Intersection.t option ref = ref None in
@@ -31,7 +36,10 @@ struct
 		in List.iter (fun x -> checkIntersection x) (World.getObjects world);
 		(!nearestIntersection, !intersectedObject)
 
-
+  (*
+    for given ray and world check if ray intersects with any object.
+    if so return color of the object, its representation and point of intersection in space
+  *)
 	let traceRay (ray: Ray.t) (world: World.t) =
 		let (nearestIntersection, intersectedObject) = getIntersection ray world in
 		match nearestIntersection with

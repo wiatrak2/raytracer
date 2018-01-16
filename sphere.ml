@@ -5,6 +5,12 @@ open Material
 
 module Sphere = 
 struct
+  (*
+    module representing sphere
+    center - point of sphere center in space 
+    radius - sphere's radius
+    material - sphere's material
+  *)
 	type t = {
 		center : Vec3f.vec3;
 		radius : Vec3f.t;
@@ -27,7 +33,12 @@ struct
 		let radius = Random.float maxRadius in
 		let randCenter = Vec3f.randVec worldCenter worldRadius in
 		make randCenter radius (Material.randMaterial ())
-
+  
+  (*
+    for given ray with origin in o and direction d check if there are t1 or t2 such that
+    o+t1*d/o+t2*d are ray-sphere intersection points, and make an intersection object for 
+    nearer of those points
+  *)
 	let checkIntersection sphere (ray:Ray.t) = 
 		let dist = Vec3f.sub (Ray.origin ray) sphere.center in
 		let a = Vec3f.len2 (Ray.direction ray) in

@@ -2,6 +2,7 @@ open Vec
 open Ray
 open Material
 
+(* module representing orthogonal basis *)
 module OrtBase = 
 struct
 	type t = {
@@ -10,6 +11,7 @@ struct
 		v : Vec3f.vec3;
 	}
 
+  (* make orthogonal basis from given vectors *)
 	let make (origin: Vec3f.vec3) (lookAt: Vec3f.vec3) (up: Vec3f.vec3) = 
 		let w = Vec3f.norm @@ Vec3f.sub lookAt origin in
 		let u = Vec3f.norm @@ Vec3f.cross w up in
@@ -18,14 +20,9 @@ struct
 
 	let get ort = (ort.w, ort.u, ort.v)
 
-	let mul ort (vec: Vec3f.vec3) = 
-		let (x, y, z) = Vec3f.get vec in
-		let x = Vec3f.smul x ort.w in
-		let y = Vec3f.smul y ort.u in
-		let z = Vec3f.smul z ort.v in 
-		Vec3f.add x @@ Vec3f.add y z
 end
 
+(* screen representation *)
 module Screen = 
 struct 
 	type t = {
@@ -58,6 +55,7 @@ struct
 	let setPixel screen (index: int) (color: Color.t) = Array.set screen.pixels index color 
 end
 
+(* eye point module *)
 module Camera = 
 struct
 	
@@ -76,6 +74,7 @@ struct
 	let getScreen camera = camera.screen
 	let getOrigin camera = camera.origin
 
+  (* use input data to compute eye point and screen location *)
 	let make (origin: Vec3f.vec3) (lookAt: Vec3f.vec3) ?(up: Vec3f.vec3 = vec3f 0. 1. 0.) (fov: float) (res: int * int)  =
     let (width, height) = res in
 		let ortb = OrtBase.make origin lookAt up in
@@ -87,7 +86,8 @@ struct
 		let screen = Screen.make (halfW *. 2.) (halfH *. 2.) res in
 		let camera = make_ origin screen ortb in
 		(camera, screen)
-		
+    
+  (* compute ray direction through given pixel (i,j) *)
 	let getRayDir camera (i: int) (j: int) =
 		let (i, j) = (float_of_int i, float_of_int j) in
 		let (pixelW, pixelH) = Screen.getPixelSize camera.screen in

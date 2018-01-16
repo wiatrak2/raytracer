@@ -11,11 +11,14 @@ struct
 	let make (direction: Vec3f.vec3) (intensity: float) = {
     direction = Vec3f.norm direction;
     intensity = intensity;
-    }
+  }
   let getSource light = Vec3f.smul (-1.) light.direction
-  let getIntensity light (norm: Vec3f.vec3) = light.intensity
+  let getIntensity light = light.intensity
 
-  let lightDir light (point: Vec3f.vec3) = Vec3f.smul (-1.) light.direction
+  let lightDir light (point: Vec3f.vec3) = 
+    Vec3f.smul (-1.) light.direction
+  
+  (* uniform light is not weaking *)
   let distanceSqToLight light (point: Vec3f.vec3) = 1.
 end
 
@@ -31,11 +34,12 @@ struct
     intensity = intensity;
     }
   let getSource light = light.source
-  let getIntensity light (norm: Vec3f.vec3) = light.intensity
+  let getIntensity light = light.intensity
 
   let lightDir light (point: Vec3f.vec3) =
     Vec3f.norm @@ Vec3f.sub light.source point
 
+  (* compute squere distance between light source and point, as light is weaking *)
   let distanceSqToLight light (point: Vec3f.vec3) = 
     let subPoints = Vec3f.sub point light.source in
     Vec3f.dot subPoints subPoints
@@ -47,7 +51,6 @@ type lightSource =
 
 module LightSource = 
 struct
-
   let make light =
     match light with
       | UniformLight_(uLight) -> UniformLight_(uLight)

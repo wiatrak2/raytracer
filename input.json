@@ -60,8 +60,8 @@
 	],
 	"uniformLights": [
 		{
-			"direction": [0.0, 0.0, -1.0],
-			"intensity": 0.2
+			"direction": [-0.3, -1.0, -0.6],
+			"intensity": 0.5
 		}
 	],
 	"camera":
@@ -84,6 +84,6 @@
 		"specular": 0.0
 	},
 	"output": "output.ppm",
-	"brightnessTarget": 0.4,
-	"gammaCorrection": false
+	"brightnessTarget": 0.5,
+	"gammaCorrection": true
 }

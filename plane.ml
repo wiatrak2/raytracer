@@ -5,6 +5,12 @@ open Material
 
 module Plane =
 struct
+  (*
+    module with plane representation
+    point - point on plane
+    normal - normal vector of plane
+    material - plane's material
+  *)
 	type t = {
 		point: Vec3f.vec3;
 		normal: Vec3f.vec3;
@@ -19,7 +25,9 @@ struct
 
 	let getMaterial plane = plane.material
 	let getNormal plane = plane.normal
-	
+  
+  (* check if there is a parameter t such that ray with origin in o and direction d
+     intersects with plane *)
 	let checkIntersection plane (ray:Ray.t) =
 		let rayOrigin = Ray.origin ray in
 		let rayDir = Ray.direction ray in

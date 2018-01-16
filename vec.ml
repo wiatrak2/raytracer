@@ -13,11 +13,14 @@ sig
 	val abs : vec3 -> t
 	val len2 : vec3 -> t
 	val norm : vec3 -> vec3
-	val cross : vec3 -> vec3 -> vec3
+  val cross : vec3 -> vec3 -> vec3
+  val randVec : vec3 -> float -> vec3
+  val reflectVec : vec3 -> vec3 -> vec3
+  val listToVec : t list -> vec3
 	val printVec : vec3 -> unit
 end
 
-module Vec3f = 
+module Vec3f : VEC3 with type t = float = 
 struct
 	type t = float
 	type vec3 = {
