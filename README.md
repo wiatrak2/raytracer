@@ -19,6 +19,8 @@ An inplementation of ray tracer for given scene. Input is a simple JSON file par
  - camera situated in given position with given direction
  - possible gamma correction
 
+The repository contains an example input file ``input.json``. To compile the program use ``make`` command. To execute generated ``raytracer`` binary provide input file name as argument e.g. ``./raytracer input.json`` will execute the program with exemplary input.
+
 The output is **.ppm** file, for instance:
 
 ![output](https://github.com/wiatrak2/raytracer/blob/master/output.jpg?raw=true)
